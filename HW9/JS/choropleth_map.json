@@ -1,0 +1,47 @@
+{"$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+    "title": "US Car Accidents (2016-2021)",
+    "width": 750,
+    "height": 600,
+    "projection": {"type": "albersUsa"},
+    
+    "data": {
+        "url": "https://raw.githubusercontent.com/Frenchy387/FIT3179/main/ne_110m_admin_1_states_provinces.json",
+        "format": {"type": "topojson", "feature": "ne_110m_admin_1_states_provinces"}
+    },
+    "transform": [
+        {
+            "lookup": "properties.postal",
+            "from": {
+                "data": {
+                    "url": "https://raw.githubusercontent.com/Frenchy387/FIT3179/main/test4.csv"
+                },
+                "key": "State", "fields": ["ID", "Cars"]
+            }
+        },
+        {
+            "calculate": "datum.ID/datum.Cars", "as": "Crashes Per Registered Car"
+            },
+        {
+             "calculate": "datum.ID", "as": "Number of Crashes"},
+             {
+             "calculate": "datum.Cars", "as": "Number of Cars"}
+    ],
+    "mark": {"type": "geoshape","stroke": "gray"},
+    "encoding": {
+        "color":{
+            "field": "Crashes Per Registered Car",
+            "type": "quantitative",
+            "scale": { "type": "linear"},
+            "legend": {"format": ".2"}
+        },
+        
+    "tooltip": [
+        {"field": "properties.name", "type": "nominal", "title": "State"},
+        {"field": "Crashes Per Registered Car","format": ".2", "type": "quantitative", "title": "Crashes Per Registered Car" }
+        ,
+        {"field": "Number of Crashes", "type": "quantitative", "title": "Number of Crashes" }
+        ,
+        {"field": "Number of Cars", "type": "quantitative", "title": "Registered Cars" }
+    ]
+    }           
+}
